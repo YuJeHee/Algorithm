@@ -1,2 +1,2 @@
-# Algorithm-Study
-Programming Language Algorithm Study
+# Algorithm
+Programming Language Algorithm
