@@ -45,10 +45,10 @@ int main()
 
 		case 3:
 			printf("Pop Data : ");
-			input = Pop(&s);
-			if (input >= 1)
+			index = Pop(&s);
+			if (index >= 1)
 			{
-				printf("%d\n", input);
+				printf("%d\n", index);
 			}
 			break;
 
