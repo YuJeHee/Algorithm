@@ -8,80 +8,12 @@ typedef struct _Satck
 	int max;
 } Stack;
 
-void InitStack(Stack* s, int size)
-{
-	s->stack = (int*)malloc(sizeof(int) * size);
-	if (s->stack <= NULL)
-	{
-		printf("Stack Init Error!\n");
-		return -1;
-	}
-	else
-	{
-		s->top = 0;
-		s->max = size;
-	}
-	
-}
-
-void Push(Stack* s, int data)
-{
-	if (s->top == s->max)
-	{
-		printf("Push Error!\n");
-		return -1;
-	}
-	else
-	{
-		s->stack[s->top] = data;
-		++s->top;
-		return 0;
-	}
-}
-
-int Pop(Stack* s)
-{
-	if (s->top <= 0)
-	{
-		printf("Pop Error!\n");
-		return -1;
-	}
-	else
-	{
-		--s->top;
-		return s->stack[s->top];
-	}
-	
-}
-
-int Search(Stack* s, int data)
-{
-	int i;
-	for (i = 0; i < s->top; i++)
-	{
-		if (s->stack[i] == data)
-		{
-		return i;
-		}
-	}
-	return -1;
-}
-
-void Print(Stack* s)
-{
-	int i;
-	for (i = 0; i < s->top; i++)
-	{
-
-		printf("s[%d] = % d\n", i, s->stack[i]);
-	}
-}
-
-void UnInitStack(Stack* s)
-{
-	free(s->stack);
-	s->top = 0;
-}
+void InitStack(Stack* s, int size);
+void Push(Stack* s, int data);
+int Pop(Stack* s);
+int Search(Stack* s, int data);
+void Print(Stack* s);
+void UnInitStack(Stack* s);
 
 int main()
 {
@@ -114,7 +46,7 @@ int main()
 		case 3:
 			printf("Pop Data : ");
 			input = Pop(&s);
-			if(input >= 1)
+			if (input >= 1)
 			{
 				printf("%d\n", input);
 			}
@@ -142,4 +74,79 @@ int main()
 		UnInitStack(&s);
 	}
 	return 0;
+}
+
+void InitStack(Stack* s, int size)
+{
+	s->stack = (int*)malloc(sizeof(int) * size);
+	if (s->stack <= NULL)
+	{
+		printf("Stack Init Error!\n");
+		return -1;
+	}
+	else
+	{
+		s->top = 0;
+		s->max = size;
+	}
+
+}
+
+void Push(Stack* s, int data)
+{
+	if (s->top == s->max)
+	{
+		printf("Push Error!\n");
+		return -1;
+	}
+	else
+	{
+		s->stack[s->top] = data;
+		++s->top;
+		return 0;
+	}
+}
+
+int Pop(Stack* s)
+{
+	if (s->top <= 0)
+	{
+		printf("Pop Error!\n");
+		return -1;
+	}
+	else
+	{
+		--s->top;
+		return s->stack[s->top];
+	}
+
+}
+
+int Search(Stack* s, int data)
+{
+	int i;
+	for (i = 0; i < s->top; i++)
+	{
+		if (s->stack[i] == data)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+void Print(Stack* s)
+{
+	int i;
+	for (i = 0; i < s->top; i++)
+	{
+
+		printf("s[%d] = % d\n", i, s->stack[i]);
+	}
+}
+
+void UnInitStack(Stack* s)
+{
+	free(s->stack);
+	s->top = 0;
 }
