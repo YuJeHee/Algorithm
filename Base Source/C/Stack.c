@@ -1,214 +1,145 @@
 #include <stdio.h>
-#include "IntStack.h"
+#include <stdlib.h>
 
-typedef struct {
-	int max;
-	int ptr;
-	int* stk;
-} IntStack;
-
-int Initialize(IntStack* s, int max);
-int Push(IntStack* s, int x);
-int Pop(IntStack* s, int* x);
-int Peek(const IntStack* s, int* x);
-void Clear(IntStack* s);
-int Capacity(const IntStack* s);
-int Size(const IntStack* s);
-int IsEmpty(const IntStack* s);
-int IsFull(const IntStack* s);
-int Search(const IntStack* s, int x);
-void Print(const IntStack* s);
-void Terminate(IntStack* s);
-
-int main()
+typedef struct _Satck
 {
-	IntStack s;
-	if (Initialize(&s, 64) == -1)
+	int* stack;
+	int top;
+	int max;
+} Stack;
+
+void InitStack(Stack* s, int size)
+{
+	s->stack = (int*)malloc(sizeof(int) * size);
+	if (s->stack <= NULL)
 	{
 		printf("Stack Init Error!\n");
 		return -1;
 	}
-	while (1)
+	else
 	{
-		int menu, x, index;
-		printf("현재 데이터 수 : %d / %d\n", Size(&s), Capacity(&s));
-		printf("1. Push\n2. Pop\n3. Peek\n4. Print\n5. Search\n6. IsEmpty\n7. IsFull\n0. Terminate\nMenu Input : ");
-		scanf("%d", &menu);
-
-		if (menu == 0) break;
-
-		switch (menu)
-		{
-		case 1:
-			printf("Push Data : ");
-			scanf("%d", &x);
-			if (Push(&s, x) == 1)
-			{
-				printf("Push Error!\n");
-			}
-			break;
-			
-		case 2:
-			if (Pop(&s, &x) == -1)
-			{
-				printf("Pop Error!\n");
-			}
-			else
-			{
-				printf("Pop Data : %d\n", x);
-			}
-			break;
-
-		case 3:
-			if (Peek(&s, &x) == 1)
-			{
-				printf("Peek Error!\n");
-			}
-			else
-			{
-				printf("Peek Data : %d \n", x);
-			}
-			break;
-
-		case 4:
-			Print(&s);
-			break;
-
-		case 5:
-			printf("Search Data : ");
-			scanf("%d", &x);
-			if ((index = Search(&s, x)) == 1)
-			{
-				printf("Search Error!\n");
-			}
-			else
-			{
-				printf("Search Data : %d to index", index);
-			}
-			break;
-
-		case 6:
-			if(IsEmpty(&s) <= 0)
-			{
-				printf("Not Empty!\n");
-			}
-
-			else
-			{
-				printf("Is Empty!\n");
-			}
-			break;
-		case 7:
-			if(IsFull(&s) <= 0)
-			{
-				printf("not Full!\n");
-			}
-			else
-			{
-				printf("Is Full!\n");
-			}
-			break;
-		}
+		s->top = 0;
+		s->max = size;
 	}
-
-	Terminate(&s);
-
-	return 0;
-}
-
-
-int Initialize(IntStack* s, int max)
-{
-	s->ptr = 0;
-	if ((s->stk = (int*)malloc(sizeof(int) * max)) == NULL)
-		//if((s->stk = calloc(max, sizeof(int))) == NULL)
-	{
-		s->max = 0;
-		return -1;
-	}
-	s->max = max;
 	
-  return 0;
 }
 
-int Push(IntStack* s, int x)
+void Push(Stack* s, int data)
 {
-	if (s->ptr >= s->max)
+	if (s->top == s->max)
+	{
+		printf("Push Error!\n");
 		return -1;
-
-	s->stk[s->ptr++] = x;
-	return 0;
+	}
+	else
+	{
+		s->stack[s->top] = data;
+		++s->top;
+		return 0;
+	}
 }
 
-int Pop(IntStack* s, int* x)
+int Pop(Stack* s)
 {
-	if (s->ptr <= 0)
+	if (s->top <= 0)
+	{
+		printf("Pop Error!\n");
 		return -1;
-	*x = s->stk[s->ptr--];
-	return 0;
+	}
+	else
+	{
+		--s->top;
+		return s->stack[s->top];
+	}
+	
 }
 
-int Peek(const IntStack* s, int* x)
-{
-	if (s->ptr <= 0)
-		return -1;
-	*x = s->stk[s->ptr - 1];
-	return 0;
-}
-
-void Clear(IntStack* s)
-{
-	s->ptr = 0;
-}
-
-int Capacity(const IntStack* s)
-{
-	return s->max;
-}
-
-int Size(const IntStack* s)
-{
-	return s->ptr;
-}
-
-int IsEmpty(const IntStack* s)
-{
-	return s->ptr <= 0;
-}
-
-int IsFull(const IntStack* s)
-{
-	return s->ptr >= s->max;
-}
-
-int Search(const IntStack* s, int x)
+int Search(Stack* s, int data)
 {
 	int i;
-	for (i = s->ptr - 1; i >= 0; i--)
+	for (i = 0; i < s->top; i++)
 	{
-		if (s->stk[i] == x)
+		if (s->stack[i] == data)
 		{
-			return i;
+		return i;
 		}
 	}
 	return -1;
 }
 
-void Print(const IntStack* s)
+void Print(Stack* s)
 {
 	int i;
-	for (i = 0; i < s->ptr; i++)
+	for (i = 0; i < s->top; i++)
 	{
-		printf("%d ", s->stk[i]);
+
+		printf("s[%d] = % d\n", i, s->stack[i]);
 	}
-	printf("\n");
 }
 
-void Terminate(IntStack* s)
+void UnInitStack(Stack* s)
 {
-	if (s->stk != NULL)
+	free(s->stack);
+	s->top = 0;
+}
+
+int main()
+{
+	Stack s;
+	while (1)
 	{
-		free(s->stk);
+		int input, index, i, num;
+
+		printf("\n메뉴 입력\n");
+		printf("1. Stack Init\n2. Push\n3. Pop\n4. Search\n5. Print\n0. Quit\nMenu Select : ");
+		scanf("%d", &num);
+		if (num == 0)
+		{
+			break;
+		}
+		switch (num)
+		{
+		case 1:
+			printf("Stack Size Input : ");
+			scanf("%d", &input);
+			InitStack(&s, input);
+			break;
+
+		case 2:
+			printf("Push Data : ");
+			scanf("%d", &input);
+			Push(&s, input);
+			break;
+
+		case 3:
+			printf("Pop Data : ");
+			input = Pop(&s);
+			if(input >= 1)
+			{
+				printf("%d\n", input);
+			}
+			break;
+
+		case 4:
+			printf("Search Data : ");
+			scanf("%d", &input);
+			index = Search(&s, input);
+			if (index >= 1)
+			{
+				printf("s[%d] = %d\n", index, input);
+			}
+			else
+			{
+				printf("Search Error!\n");
+			}
+			break;
+
+		case 5:
+			printf("Stack Print!\n");
+			Print(&s);
+			break;
+		}
+		UnInitStack(&s);
 	}
-	s->max = s->ptr = 0;
+	return 0;
 }
